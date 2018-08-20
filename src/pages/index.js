@@ -87,7 +87,7 @@ function Reply(props) {
 
             <Grid container wrap="nowrap" spacing={16} style={{paddingTop: '10px'}}>
                 <Grid item>
-                    <Avatar style={{backgroundColor: avatarColor[500]}}>{props.info.text.slice(1,2) == '洞' ? 'DZ' : props.info.text.slice(1,2)}</Avatar>
+                    <Avatar style={{backgroundColor: avatarColor[500]}}>{props.info.text.slice(1,2) === '洞' ? 'DZ' : props.info.text.slice(1,2)}</Avatar>
                 </Grid>
                 <Grid item xs>
                     <Typography component="p" align='left' gutterBottom
