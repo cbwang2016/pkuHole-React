@@ -78,13 +78,13 @@ function Reply(props) {
     return (
         <CardContent>
             <Divider />
-            <CardActions className='actions'>
+            <CardActions className='actions' style={{paddingTop: '20px'}}>
                 <Chip label={<Time stamp={props.info.timestamp}/>} color="primary"/>
                 <Typography variant="caption" gutterBottom align="center">#{props.info.cid}</Typography>
             </CardActions>
 
             <Typography component="p" align='left' gutterBottom
-                        style={{paddingLeft: '20px', paddingRight:'20px', paddingTop:'5px', paddingBottom: '0px'}}>{props.info.text}</Typography>
+                        style={{paddingLeft: '20px', paddingRight:'20px', paddingTop:'5px', paddingBottom: '-5px'}}>{props.info.text}</Typography>
         </CardContent>
     );
 }
@@ -97,7 +97,7 @@ function ReplyPlaceholder(props) {
 
 function CenteredLine(props) {
     return (
-        <p className="centered-line">
+        <p>
             <span>{props.text}</span>
         </p>
     )
@@ -137,7 +137,7 @@ class FlowChunkItem extends React.Component {
                 <Card>
                     <CardContent>
                         <Typography component="p" align='left' gutterBottom
-                                    style={{padding: '20px 20px'}}>{this.info.text}</Typography>
+                                    style={{paddingLeft: '20px', paddingRight:'20px', paddingTop:'10px', paddingBottom: '0px'}}>{this.info.text}</Typography>
                         {this.info.type === 'audio' ? <audio src={AUDIO_BASE + this.info.url}/> : null}
                         {this.info.type === 'image' ? <img src={IMAGE_BASE + this.info.url}
                                                            style={{maxWidth: '100%', maxHeight: '100%'}}/> : null}
@@ -181,9 +181,10 @@ class Index extends React.Component {
             mode: props.mode,
             loaded_pages: 0,
             chunks: [],
-            open: false
+            open: false,
+            loading: false,
         };
-        this.load_page(1);
+        setTimeout(this.load_page.bind(this,1), 0);
     }
 
     load_page(page) {
@@ -192,7 +193,8 @@ class Index extends React.Component {
         if (page === this.state.loaded_pages + 1) {
             console.log('fetching page', page);
             this.setState((prev, props) => ({
-                loaded_pages: prev.loaded_pages + 1
+                loaded_pages: prev.loaded_pages + 1,
+                loading: true,
             }));
             fetch(GETLIST_BASE + page)
                 .then((res) => res.json())
@@ -203,7 +205,8 @@ class Index extends React.Component {
                         chunks: prev.chunks.concat([{
                             title: 'Page ' + page,
                             data: json.data,
-                        }])
+                        }]),
+                        loading: false,
                     }));
                 })
                 .catch((err) => {
@@ -224,6 +227,24 @@ class Index extends React.Component {
             open: true,
         });
     };
+
+    on_scroll(event) {
+        if(event.target===document) {
+            //console.log(event);
+            const avail=document.body.scrollHeight-window.scrollY-window.innerHeight;
+            if(avail<window.innerHeight && this.state.loading===false)
+                this.load_page(this.state.loaded_pages+1);
+        }
+    }
+
+    componentDidMount() {
+        window.addEventListener('scroll',this.on_scroll.bind(this));
+        window.addEventListener('resize',this.on_scroll.bind(this));
+    }
+    componentWillUnmount() {
+        window.removeEventListener('scroll',this.on_scroll.bind(this));
+        window.removeEventListener('resize',this.on_scroll.bind(this));
+    }
 
     render() {
         const {classes} = this.props;
@@ -266,6 +287,7 @@ class Index extends React.Component {
                         <FlowChunk title={chunk.title} list={chunk.data} key={chunk.title}
                                    callback={this.props.callback}/>
                     ))}
+                    <CenteredLine text={this.state.loading ? 'Loading More...' : ''} />
                 </div>
             </div>
         );
