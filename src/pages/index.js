@@ -27,7 +27,8 @@ import Divider from "@material-ui/core/Divider/Divider";
 import MenuIcon from '@material-ui/icons/School';
 import FavIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
-import avatarColor from '@material-ui/core/colors/lightBlue';
+import avatarColor from '@material-ui/core/colors/blue';
+import Pink from '@material-ui/core/colors/pink';
 
 const IMAGE_BASE = 'https://holeapi.wangcb.com/services/pkuhole/images/';
 const AUDIO_BASE = 'https://holeapi.wangcb.com/services/pkuhole/audios/';
@@ -80,7 +81,7 @@ function Reply(props) {
         <CardContent>
             <Divider/>
             <CardActions className='actions' style={{paddingTop: '20px'}}>
-                <Chip label={<Time stamp={props.info.timestamp}/>} color="primary"/>
+                <Chip label={<Time stamp={props.info.timestamp}/>} color="white"/>
                 <Typography variant="caption" gutterBottom align="center">#{props.info.cid}</Typography>
             </CardActions>
 
@@ -172,10 +173,10 @@ class FlowChunkItem extends React.Component {
                         </Grid>
                     </CardContent>
                     <CardActions className='actions'>
-                        <Chip label={this.info.likenum} color="secondary" avatar={<Avatar><FavIcon/></Avatar>}/>
-                        <Chip label={this.info.reply} color="secondary" avatar={<Avatar><CommentIcon/></Avatar>}/>
+                        <Chip label={this.info.likenum} color="white" avatar={<Avatar  style={{color: Pink[400]}}><FavIcon/></Avatar>}/>
+                        <Chip label={this.info.reply} color="white" avatar={<Avatar><CommentIcon/></Avatar>}/>
                         <Typography variant="caption" gutterBottom>#{this.info.pid}</Typography>
-                        <Chip label={<Time stamp={this.info.timestamp}/>} color="secondary"/>
+                        <Chip label={<Time stamp={this.info.timestamp}/>} color="white"/>
                     </CardActions>
                     {this.state.reply_loading && <ReplyPlaceholder count={this.info.reply}/>}
                     {this.state.replies.map((reply) => <Reply info={reply} key={reply.cid}/>)}
