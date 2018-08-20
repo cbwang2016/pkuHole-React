@@ -9,11 +9,13 @@
     "react": "latest",
     "react-dom": "latest",
     "react-scripts": "latest",
-    "react-timeago": "^4.1.9"
+    "react-timeago": "^4.1.9",
+    "serve": "^9.6.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "now-start": "serve --single ./build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
