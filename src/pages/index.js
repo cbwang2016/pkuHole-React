@@ -257,7 +257,7 @@ class Index extends React.Component {
                             P大树洞
                         </Typography>
                         <Button color="inherit" onClick={this.handleClick}>ToS</Button>
-                        <Button color="inherit" href="https://www.baidu.com">GitHub</Button>
+                        <Button color="inherit" href="https://github.com/cbwang2016/pkuHole-React">GitHub</Button>
                     </Toolbar>
                 </AppBar>
 
