@@ -27,6 +27,7 @@ import Divider from "@material-ui/core/Divider/Divider";
 import MenuIcon from '@material-ui/icons/School';
 import FavIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
+import Refresh from '@material-ui/icons/Refresh';
 import avatarColor from '@material-ui/core/colors/blue';
 import Pink from '@material-ui/core/colors/pink';
 
@@ -88,7 +89,8 @@ function Reply(props) {
 
             <Grid container wrap="nowrap" spacing={16} style={{paddingTop: '10px'}}>
                 <Grid item>
-                    <Avatar style={{backgroundColor: avatarColor[500]}}>{props.info.text.slice(1,2) === '洞' ? 'DZ' : props.info.text.slice(1,2)}</Avatar>
+                    <Avatar
+                        style={{backgroundColor: avatarColor[500]}}>{props.info.text.slice(1, 2) === '洞' ? 'DZ' : props.info.text.slice(1, 2)}</Avatar>
                 </Grid>
                 <Grid item xs>
                     <Typography component="p" align='left' gutterBottom
@@ -173,7 +175,8 @@ class FlowChunkItem extends React.Component {
                         </Grid>
                     </CardContent>
                     <CardActions className='actions'>
-                        <Chip label={this.info.likenum} color="white" avatar={<Avatar  style={{color: Pink[400]}}><FavIcon/></Avatar>}/>
+                        <Chip label={this.info.likenum} color="white"
+                              avatar={<Avatar style={{color: Pink[500]}}><FavIcon/></Avatar>}/>
                         <Chip label={this.info.reply} color="white" avatar={<Avatar><CommentIcon/></Avatar>}/>
                         <Typography variant="caption" gutterBottom>#{this.info.pid}</Typography>
                         <Chip label={<Time stamp={this.info.timestamp}/>} color="white"/>
@@ -277,6 +280,16 @@ class Index extends React.Component {
         window.removeEventListener('resize', this.on_scroll.bind(this));
     }
 
+    refresh = () => {
+        this.setState({
+            loaded_pages: 0,
+            chunks: [],
+            open: false,
+            loading: false,
+        });
+        setTimeout(this.load_page.bind(this, 1), 0);
+    }
+
     render() {
         const {classes} = this.props;
         const {open} = this.state;
@@ -312,6 +325,14 @@ class Index extends React.Component {
                         <Button color="inherit" href="https://github.com/cbwang2016/pkuHole-React">GitHub</Button>
                     </Toolbar>
                 </AppBar>
+
+                <Button variant="fab" color="primary" style={{
+                    position: 'fixed',
+                    bottom: '20px',
+                    right: '20px',
+                }} onClick={this.refresh}>
+                    <Refresh/>
+                </Button>
 
                 <div className="flow-container">
                     {this.state.chunks.map((chunk) => (
