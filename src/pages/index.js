@@ -23,6 +23,7 @@ import Avatar from "@material-ui/core/Avatar/Avatar";
 import CardContent from "@material-ui/core/CardContent/CardContent";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Divider from "@material-ui/core/Divider/Divider";
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 import MenuIcon from '@material-ui/icons/School';
 import FavIcon from '@material-ui/icons/Favorite';
@@ -339,7 +340,7 @@ class Index extends React.Component {
                         <FlowChunk title={chunk.title} list={chunk.data} key={chunk.title}
                                    callback={this.props.callback}/>
                     ))}
-                    <CenteredLine text={this.state.loading ? 'Loading More...' : ''}/>
+                    {this.state.loading ? <LinearProgress /> : ''}
                 </div>
             </div>
         );
