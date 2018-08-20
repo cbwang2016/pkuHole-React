@@ -27,6 +27,7 @@ import Divider from "@material-ui/core/Divider/Divider";
 import MenuIcon from '@material-ui/icons/School';
 import FavIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
+import avatarColor from '@material-ui/core/colors/lightBlue';
 
 const IMAGE_BASE = 'https://holeapi.wangcb.com/services/pkuhole/images/';
 const AUDIO_BASE = 'https://holeapi.wangcb.com/services/pkuhole/audios/';
@@ -77,14 +78,27 @@ function pad2(x) {
 function Reply(props) {
     return (
         <CardContent>
-            <Divider />
+            <Divider/>
             <CardActions className='actions' style={{paddingTop: '20px'}}>
                 <Chip label={<Time stamp={props.info.timestamp}/>} color="primary"/>
                 <Typography variant="caption" gutterBottom align="center">#{props.info.cid}</Typography>
             </CardActions>
 
-            <Typography component="p" align='left' gutterBottom
-                        style={{paddingLeft: '20px', paddingRight:'20px', paddingTop:'5px', paddingBottom: '-5px'}}>{props.info.text}</Typography>
+
+            <Grid container wrap="nowrap" spacing={16} style={{paddingTop: '10px'}}>
+                <Grid item>
+                    <Avatar style={{backgroundColor: avatarColor[500]}}>{props.info.text.slice(1,2) == '洞' ? 'DZ' : props.info.text.slice(1,2)}</Avatar>
+                </Grid>
+                <Grid item xs>
+                    <Typography component="p" align='left' gutterBottom
+                                style={{
+                                    paddingLeft: '0px',
+                                    paddingRight: '20px',
+                                    paddingTop: '5px',
+                                    paddingBottom: '-5px'
+                                }}>{props.info.text}</Typography>
+                </Grid>
+            </Grid>
         </CardContent>
     );
 }
@@ -136,11 +150,26 @@ class FlowChunkItem extends React.Component {
             <Grid item style={{width: 'calc(100% - 16px)', maxWidth: '600px'}}>
                 <Card>
                     <CardContent>
-                        <Typography component="p" align='left' gutterBottom
-                                    style={{paddingLeft: '20px', paddingRight:'20px', paddingTop:'10px', paddingBottom: '0px'}}>{this.info.text}</Typography>
-                        {this.info.type === 'audio' ? <audio src={AUDIO_BASE + this.info.url}/> : null}
-                        {this.info.type === 'image' ? <img src={IMAGE_BASE + this.info.url} alt="img"
-                                                           style={{maxWidth: '100%', maxHeight: '100%'}}/> : null}
+                        <Grid container wrap="nowrap" spacing={16}>
+                            <Grid item>
+                                <Avatar style={{backgroundColor: avatarColor[500]}}>DZ</Avatar>
+                            </Grid>
+                            <Grid item xs>
+                                <Typography component="p" align='left' gutterBottom
+                                            style={{
+                                                paddingLeft: '0px',
+                                                paddingRight: '20px',
+                                                paddingTop: '10px',
+                                                paddingBottom: '0px'
+                                            }}>{this.info.text}</Typography>
+                                {this.info.type === 'audio' ? <audio src={AUDIO_BASE + this.info.url}/> : null}
+                                {this.info.type === 'image' ? <img src={IMAGE_BASE + this.info.url} alt="img"
+                                                                   style={{
+                                                                       maxWidth: '100%',
+                                                                       maxHeight: '100%'
+                                                                   }}/> : null}
+                            </Grid>
+                        </Grid>
                     </CardContent>
                     <CardActions className='actions'>
                         <Chip label={this.info.likenum} color="secondary" avatar={<Avatar><FavIcon/></Avatar>}/>
@@ -184,7 +213,7 @@ class Index extends React.Component {
             open: false,
             loading: false,
         };
-        setTimeout(this.load_page.bind(this,1), 0);
+        setTimeout(this.load_page.bind(this, 1), 0);
     }
 
     load_page(page) {
@@ -229,21 +258,22 @@ class Index extends React.Component {
     };
 
     on_scroll(event) {
-        if(event.target===document) {
+        if (event.target === document) {
             //console.log(event);
-            const avail=document.body.scrollHeight-window.scrollY-window.innerHeight;
-            if(avail<window.innerHeight && this.state.loading===false)
-                this.load_page(this.state.loaded_pages+1);
+            const avail = document.body.scrollHeight - window.scrollY - window.innerHeight;
+            if (avail < window.innerHeight && this.state.loading === false)
+                this.load_page(this.state.loaded_pages + 1);
         }
     }
 
     componentDidMount() {
-        window.addEventListener('scroll',this.on_scroll.bind(this));
-        window.addEventListener('resize',this.on_scroll.bind(this));
+        window.addEventListener('scroll', this.on_scroll.bind(this));
+        window.addEventListener('resize', this.on_scroll.bind(this));
     }
+
     componentWillUnmount() {
-        window.removeEventListener('scroll',this.on_scroll.bind(this));
-        window.removeEventListener('resize',this.on_scroll.bind(this));
+        window.removeEventListener('scroll', this.on_scroll.bind(this));
+        window.removeEventListener('resize', this.on_scroll.bind(this));
     }
 
     render() {
@@ -260,7 +290,7 @@ class Index extends React.Component {
                         <Dialog open={open} onClose={this.handleClose}>
                             <DialogTitle>Terms of Service</DialogTitle>
                             <DialogContent>
-                                <DialogContentText>P大树洞网页版<br/><br/>
+                                <DialogContentText>P大树洞网页版(Unofficial)<br/><br/>
 
                                     使用本网站时，您需要了解并同意：<br/>
 
@@ -287,7 +317,7 @@ class Index extends React.Component {
                         <FlowChunk title={chunk.title} list={chunk.data} key={chunk.title}
                                    callback={this.props.callback}/>
                     ))}
-                    <CenteredLine text={this.state.loading ? 'Loading More...' : ''} />
+                    <CenteredLine text={this.state.loading ? 'Loading More...' : ''}/>
                 </div>
             </div>
         );
