@@ -139,7 +139,7 @@ class FlowChunkItem extends React.Component {
                         <Typography component="p" align='left' gutterBottom
                                     style={{paddingLeft: '20px', paddingRight:'20px', paddingTop:'10px', paddingBottom: '0px'}}>{this.info.text}</Typography>
                         {this.info.type === 'audio' ? <audio src={AUDIO_BASE + this.info.url}/> : null}
-                        {this.info.type === 'image' ? <img src={IMAGE_BASE + this.info.url}
+                        {this.info.type === 'image' ? <img src={IMAGE_BASE + this.info.url} alt="img"
                                                            style={{maxWidth: '100%', maxHeight: '100%'}}/> : null}
                     </CardContent>
                     <CardActions className='actions'>
