@@ -8,6 +8,8 @@
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-masonry-component": "^6.2.1",
+    "react-masonry-infinite": "^1.2.2",
     "react-scripts": "latest",
     "react-timeago": "^4.1.9",
     "serve": "^9.6.0"

@@ -24,6 +24,7 @@ import CardContent from "@material-ui/core/CardContent/CardContent";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Divider from "@material-ui/core/Divider/Divider";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import Masonry from 'react-masonry-component';
 
 import MenuIcon from '@material-ui/icons/School';
 import FavIcon from '@material-ui/icons/Favorite';
@@ -36,6 +37,11 @@ const IMAGE_BASE = 'https://holeapi.wangcb.com/services/pkuhole/images/';
 const AUDIO_BASE = 'https://holeapi.wangcb.com/services/pkuhole/audios/';
 const GETCOMMENT_BASE = 'https://holeapi.wangcb.com/services/pkuhole/api.php?action=getcomment&pid=';
 const GETLIST_BASE = 'https://holeapi.wangcb.com/services/pkuhole/api.php?action=getlist&p=';
+
+const masonryOptions = {
+    transitionDuration: 0,
+    fitWidth: true,
+};
 
 const styles = theme => ({
     root: {
@@ -54,7 +60,6 @@ const styles = theme => ({
     },
     card: {
         maxWidth: 400,
-
     },
     actions: {
         display: 'flex',
@@ -83,7 +88,7 @@ function Reply(props) {
         <CardContent>
             <Divider/>
             <CardActions className='actions' style={{paddingTop: '20px'}}>
-                <Chip label={<Time stamp={props.info.timestamp}/>} color="white"/>
+                <Chip label={<Time stamp={props.info.timestamp}/>}/>
                 <Typography variant="caption" gutterBottom align="center">#{props.info.cid}</Typography>
             </CardActions>
 
@@ -151,59 +156,54 @@ class FlowChunkItem extends React.Component {
     render() {
         // props.do_show_details
         return (
-            <Grid item style={{width: 'calc(100% - 16px)', maxWidth: '600px'}}>
-                <Card>
-                    <CardContent>
-                        <Grid container wrap="nowrap" spacing={16}>
-                            <Grid item>
-                                <Avatar style={{backgroundColor: avatarColor[500]}}>DZ</Avatar>
-                            </Grid>
-                            <Grid item xs>
-                                <Typography component="p" align='left' gutterBottom
-                                            style={{
-                                                paddingLeft: '0px',
-                                                paddingRight: '20px',
-                                                paddingTop: '10px',
-                                                paddingBottom: '0px'
-                                            }}>{this.info.text}</Typography>
-                                {this.info.type === 'audio' ? <audio src={AUDIO_BASE + this.info.url}/> : null}
-                                {this.info.type === 'image' ? <img src={IMAGE_BASE + this.info.url} alt="img"
-                                                                   style={{
-                                                                       maxWidth: '100%',
-                                                                       maxHeight: '100%'
-                                                                   }}/> : null}
-                            </Grid>
+            <Card style={{width: 'calc(100% - 16px)', maxWidth: '360px', margin: '10px'}}>
+                <CardContent>
+                    <Grid container wrap="nowrap" spacing={16}>
+                        <Grid item>
+                            <Avatar style={{backgroundColor: avatarColor[500]}}>DZ</Avatar>
                         </Grid>
-                    </CardContent>
-                    <CardActions className='actions'>
-                        <Chip label={this.info.likenum} color="white"
-                              avatar={<Avatar style={{color: Pink[500]}}><FavIcon/></Avatar>}/>
-                        <Chip label={this.info.reply} color="white" avatar={<Avatar><CommentIcon/></Avatar>}/>
-                        <Typography variant="caption" gutterBottom>#{this.info.pid}</Typography>
-                        <Chip label={<Time stamp={this.info.timestamp}/>} color="white"/>
-                    </CardActions>
-                    {this.state.reply_loading && <ReplyPlaceholder count={this.info.reply}/>}
-                    {this.state.replies.map((reply) => <Reply info={reply} key={reply.cid}/>)}
-                </Card>
-            </Grid>
+                        <Grid item xs>
+                            <Typography component="p" align='left' gutterBottom
+                                        style={{
+                                            paddingLeft: '0px',
+                                            paddingRight: '20px',
+                                            paddingTop: '10px',
+                                            paddingBottom: '0px'
+                                        }}>{this.info.text}</Typography>
+                            {this.info.type === 'audio' ? <audio src={AUDIO_BASE + this.info.url}/> : null}
+                            {this.info.type === 'image' ? <img src={IMAGE_BASE + this.info.url} alt="img"
+                                                               style={{
+                                                                   maxWidth: '100%',
+                                                                   maxHeight: '100%'
+                                                               }}/> : null}
+                        </Grid>
+                    </Grid>
+                </CardContent>
+                <CardActions className='actions'>
+                    <Chip label={this.info.likenum}
+                          avatar={<Avatar style={{color: Pink[500]}}><FavIcon/></Avatar>}/>
+                    <Chip label={this.info.reply} avatar={<Avatar><CommentIcon/></Avatar>}/>
+                    <Typography variant="caption" gutterBottom>#{this.info.pid}</Typography>
+                    <Chip label={<Time stamp={this.info.timestamp}/>}/>
+                </CardActions>
+                {this.state.reply_loading && <ReplyPlaceholder count={this.info.reply}/>}
+                {this.state.replies.map((reply) => <Reply info={reply} key={reply.cid}/>)}
+            </Card>
         );
     }
 }
 
 function FlowChunk(props) {
     return (
-        <div className="flow-chunk">
+        <div className="flow-chunk" style={{margin: '0 auto', width: '100%'}}>
             <CenteredLine text={props.title}/>
-            <Grid
-                container
-                className="demo"
-                direction="column"
-                justify="center"
-                alignItems="center"
-                spacing={16}
+            <Masonry
+                elementType={'div'} // default 'div'
+                options={masonryOptions} // default {}
+                style={{margin: '0 auto'}}
             >
                 {props.list.map((info) => <FlowChunkItem key={info.pid} info={info} callback={props.callback}/>)}
-            </Grid>
+            </Masonry>
         </div>
     );
 }
@@ -327,6 +327,14 @@ class Index extends React.Component {
                     </Toolbar>
                 </AppBar>
 
+                <div className="flow-container" style={{margin: 'auto', width: '100%'}}>
+                    {this.state.chunks.map((chunk) => (
+                        <FlowChunk title={chunk.title} list={chunk.data} key={chunk.title}
+                                   callback={this.props.callback}/>
+                    ))}
+                    {this.state.loading ? <LinearProgress/> : ''}
+                </div>
+
                 <Button variant="fab" color="primary" style={{
                     position: 'fixed',
                     bottom: '20px',
@@ -334,14 +342,6 @@ class Index extends React.Component {
                 }} onClick={this.refresh}>
                     <Refresh/>
                 </Button>
-
-                <div className="flow-container">
-                    {this.state.chunks.map((chunk) => (
-                        <FlowChunk title={chunk.title} list={chunk.data} key={chunk.title}
-                                   callback={this.props.callback}/>
-                    ))}
-                    {this.state.loading ? <LinearProgress /> : ''}
-                </div>
             </div>
         );
     }
