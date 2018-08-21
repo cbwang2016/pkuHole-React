@@ -31,6 +31,7 @@ import FavIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import Refresh from '@material-ui/icons/Refresh';
 import avatarColor from '@material-ui/core/colors/blue';
+import avatarColor2 from '@material-ui/core/colors/amber';
 import Pink from '@material-ui/core/colors/pink';
 
 const IMAGE_BASE = 'https://holeapi.wangcb.com/services/pkuhole/images/';
@@ -95,8 +96,10 @@ function Reply(props) {
 
             <Grid container wrap="nowrap" spacing={16} style={{paddingTop: '10px'}}>
                 <Grid item>
-                    <Avatar
-                        style={{backgroundColor: avatarColor[500]}}>{props.info.text.slice(1, 2) === '洞' ? 'DZ' : props.info.text.slice(1, 2)}</Avatar>
+                    {props.info.text.slice(1, 2) === '洞' ?
+                        <Avatar style={{backgroundColor: avatarColor[500]}}>DZ</Avatar> :
+                        <Avatar style={{backgroundColor: avatarColor2[400]}}>{props.info.text.slice(1, 2)}</Avatar>}
+
                 </Grid>
                 <Grid item xs>
                     <Typography component="p" align='left' gutterBottom
