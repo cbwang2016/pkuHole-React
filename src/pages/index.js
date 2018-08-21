@@ -159,7 +159,7 @@ class FlowChunkItem extends React.Component {
     render() {
         // props.do_show_details
         return (
-            <Card style={{width: 'calc(100% - 16px)', maxWidth: '360px', margin: '12px'}} elevation={10}>
+            <Card style={{width: '100%', maxWidth: '360px', minWidth: '240px', margin: '12px'}} elevation={10}>
                 <CardContent>
                     <Grid container wrap="nowrap" spacing={16}>
                         <Grid item>
